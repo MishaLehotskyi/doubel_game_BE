@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  NotFoundException,
   Post,
   Req,
   UnauthorizedException,
@@ -10,10 +11,16 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { VerifyCodeDto } from './verify-code.dto';
+import { SendCodeDto } from './send-code.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   @Post('register')
   register(
@@ -40,12 +47,36 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(
+  async getMe(
     @Req()
     req: Request & {
-      user: { userId: string; email: string; metamaskId: string };
+      user: { userId: string };
     },
   ) {
-    return req.user;
+    const user = await this.prisma.user.findUnique({
+      where: { id: req.user.userId },
+      select: {
+        id: true,
+        email: true,
+        metamaskId: true,
+        emailVerified: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
+  }
+
+  @Post('send-code')
+  async sendCode(@Body() dto: SendCodeDto) {
+    return this.authService.sendVerificationCode(dto.email);
+  }
+
+  @Post('verify-code')
+  async verifyCode(@Body() dto: VerifyCodeDto) {
+    return this.authService.verifyEmail(dto.email, dto.code);
   }
 }

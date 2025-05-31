@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  private prisma = new PrismaClient();
+  constructor(private readonly prisma: PrismaService) {}
 
   async createUser(email: string, password: string, metamaskId: string) {
     const existing = await this.prisma.user.findFirst({
@@ -38,5 +38,26 @@ export class UserService {
     if (!user) return null;
     const isValid = await bcrypt.compare(password, user.password);
     return isValid ? user : null;
+  }
+
+  async updateVerificationCode(email: string, code: string, sentAt: Date) {
+    return this.prisma.user.update({
+      where: { email },
+      data: {
+        emailCode: code,
+        emailCodeSentAt: sentAt,
+      },
+    });
+  }
+
+  async confirmEmail(email: string) {
+    return this.prisma.user.update({
+      where: { email },
+      data: {
+        emailVerified: true,
+        emailCode: null,
+        emailCodeSentAt: null,
+      },
+    });
   }
 }
