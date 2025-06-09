@@ -7,12 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum GameType {
+  MINI
+  STANDARD
+  MEGA
+}
+
 model User {
   id              String    @id @default(uuid())
   email           String    @unique
   password        String
   metamaskId      String    @unique
-  tickets         Ticket[]
 
   emailCode       String?
   emailCodeSentAt DateTime?
@@ -23,19 +28,18 @@ model User {
 
 
 model Game {
-  id        String   @id @default(uuid())
-  startTime DateTime
-  endTime   DateTime
-  status    String
-  winners   String[] @default([])
-  tickets   Ticket[]
+  id         String    @id @default(uuid())
+  status     String
+  type       GameType
+  winners    Json      @default("[]")
+  tickets    Ticket[]
+  createdAt  DateTime  @default(now())
 }
 
 model Ticket {
-  id        String   @id @default(uuid())
-  userId    String
-  gameId    String
-  user      User     @relation(fields: [userId], references: [id])
-  game      Game     @relation(fields: [gameId], references: [id])
-  createdAt DateTime @default(now())
+  id         String   @id @default(uuid())
+  gameId     String
+  game       Game     @relation(fields: [gameId], references: [id])
+  metamaskId String
+  createdAt  DateTime @default(now())
 }
