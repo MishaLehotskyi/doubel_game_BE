@@ -106,10 +106,15 @@ export class GameService {
       });
   }
 
-  async getFinishedGames() {
+  async getFinishedGames(type: string | undefined) {
+    const gameType = Object.values(GameType).includes(type as GameType)
+      ? (type as GameType)
+      : undefined;
+
     return this.prisma.game.findMany({
       where: {
         status: 'finished',
+        ...(gameType && { gameType }),
       },
       include: { tickets: true },
       orderBy: { createdAt: 'desc' },

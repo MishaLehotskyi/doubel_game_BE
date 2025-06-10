@@ -5,7 +5,7 @@ import {
   BadRequestException,
   Body,
   Post,
-  UseGuards,
+  UseGuards, Query,
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import { GameType } from '@prisma/client';
@@ -44,8 +44,8 @@ export class GameController {
   }
 
   @Get('finished')
-  getFinishedGames() {
-    return this.gameService.getFinishedGames();
+  getFinishedGames(@Query('type') type?: string) {
+    return this.gameService.getFinishedGames(type);
   }
 
   @Post('update-winners')
@@ -62,8 +62,6 @@ export class GameController {
       payHash3: string;
     },
   ) {
-    return this.gameService.updateWinners(
-      body
-    );
+    return this.gameService.updateWinners(body);
   }
 }
