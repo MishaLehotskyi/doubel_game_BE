@@ -114,7 +114,7 @@ export class GameService {
     return this.prisma.game.findMany({
       where: {
         status: 'finished',
-        ...(gameType && { gameType }),
+        ...(type && { gameType }),
       },
       include: { tickets: true },
       orderBy: { createdAt: 'desc' },
