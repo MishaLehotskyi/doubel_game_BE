@@ -7,6 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTicketDto } from './create-ticket.dto';
 import { TicketGateway } from './ticket.gateway';
 import { VrfService } from '../vrf/vrf.service';
+import { GameService } from '../game/game.service';
 
 @Injectable()
 export class TicketService {
@@ -14,6 +15,7 @@ export class TicketService {
     private prisma: PrismaService,
     private gateway: TicketGateway,
     private vrf: VrfService,
+    private gameService: GameService,
   ) {}
 
   async create(dto: CreateTicketDto) {
@@ -59,6 +61,7 @@ export class TicketService {
     const totalTickets = game.tickets.length + 1;
     if (totalTickets === ticketLimit) {
       await this.vrf.requestRandom(false, ticketLimit === 100);
+      await this.gameService.create({ type: game.type });
     }
 
     return ticket;

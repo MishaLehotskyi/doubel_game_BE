@@ -5,9 +5,10 @@ import { TicketSecretGuard } from './ticket-secret.guard';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TicketGateway } from './ticket.gateway';
 import { VrfService } from '../vrf/vrf.service';
+import { GameModule } from '../game/game.module';
 
 @Module({
-  imports: [],
+  imports: [GameModule],
   controllers: [TicketController],
   providers: [
     TicketService,
