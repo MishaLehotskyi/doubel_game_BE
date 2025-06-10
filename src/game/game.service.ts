@@ -105,4 +105,52 @@ export class GameService {
         return has10Tickets && hasLessThan3Winners ? game : null;
       });
   }
+
+  async getFinishedGames() {
+    return this.prisma.game.findMany({
+      where: {
+        status: 'finished',
+      },
+      include: { tickets: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async updateWinners({
+    id,
+    metamaskId1,
+    payHash1,
+    metamaskId2,
+    payHash2,
+    metamaskId3,
+    payHash3,
+  }: {
+    id: string;
+    metamaskId1: string;
+    payHash1: string;
+    metamaskId2: string;
+    payHash2: string;
+    metamaskId3: string;
+    payHash3: string;
+  }) {
+    const game = await this.prisma.game.findUnique({
+      where: { id: id },
+      include: { tickets: true },
+    });
+
+    if (!game || !game.winners) return null;
+
+    const updatedWinners = [
+      { ...game.winners[0], metamaskId: metamaskId1, payHash: payHash1 },
+      { ...game.winners[1], metamaskId: metamaskId2, payHash: payHash2 },
+      { ...game.winners[2], metamaskId: metamaskId3, payHash: payHash3 },
+    ];
+
+    await this.prisma.game.update({
+      where: { id: id },
+      data: {
+        winners: updatedWinners,
+      },
+    });
+  }
 }

@@ -42,4 +42,28 @@ export class GameController {
       body.isMega,
     );
   }
+
+  @Get('finished')
+  getFinishedGames() {
+    return this.gameService.getFinishedGames();
+  }
+
+  @Post('update-winners')
+  @UseGuards(TicketSecretGuard)
+  updateWinners(
+    @Body()
+    body: {
+      id: string;
+      metamaskId1: string;
+      payHash1: string;
+      metamaskId2: string;
+      payHash2: string;
+      metamaskId3: string;
+      payHash3: string;
+    },
+  ) {
+    return this.gameService.updateWinners(
+      body
+    );
+  }
 }
