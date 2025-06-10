@@ -13,9 +13,9 @@ export class GameGateway {
   emitGameStatusChange(
     gameId: string,
     newStatus: string,
-    number: string,
-    index: number,
-    transactionHash: string,
+    number?: string,
+    index?: number,
+    transactionHash?: string,
   ) {
     this.server.emit('game-status-changed', {
       gameId,

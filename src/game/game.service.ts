@@ -90,6 +90,9 @@ export class GameService {
       .findFirst({
         where: {
           type,
+          status: {
+            not: 'open',
+          },
         },
         orderBy: { createdAt: 'desc' },
         include: { tickets: true },

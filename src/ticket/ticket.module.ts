@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { TicketGateway } from './ticket.gateway';
 import { VrfService } from '../vrf/vrf.service';
 import { GameModule } from '../game/game.module';
+import { GameGateway } from '../game/game.gateway';
 
 @Module({
   imports: [GameModule],
@@ -16,6 +17,7 @@ import { GameModule } from '../game/game.module';
     PrismaService,
     TicketGateway,
     VrfService,
+    GameGateway,
   ],
 })
 export class TicketModule {}
