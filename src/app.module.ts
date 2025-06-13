@@ -7,6 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { GameModule } from './game/game.module';
 import { TicketModule } from './ticket/ticket.module';
 import { VrfModule } from './vrf/vrf.module';
+import { WebhookModule } from './webhook/webhook.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { VrfModule } from './vrf/vrf.module';
     GameModule,
     TicketModule,
     VrfModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [AppService],
