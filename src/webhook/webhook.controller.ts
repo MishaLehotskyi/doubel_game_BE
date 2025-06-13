@@ -28,6 +28,10 @@ export class WebhookController {
     @Headers('x-alchemy-signature') signature: string,
     @Res() res: Response,
   ) {
+    if (!req.body) {
+      return res.status(HttpStatus.UNAUTHORIZED).send('Invalid signature');
+    }
+
     const rawBody = (req as any).body.toString('utf8');
     const signingKey = process.env.ALCHEMY_SIGNING_KEY;
 
