@@ -19,9 +19,6 @@ export class WebhookController {
     console.log('📬 Заголовки запроса:');
     console.dir(headers, { depth: null });
 
-    console.log('📦 Тело запроса:');
-    console.dir(req.body, { depth: null });
-
     res.status(HttpStatus.OK).send('✅ Принято');
   }
 }
