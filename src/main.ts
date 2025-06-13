@@ -10,6 +10,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.use('/webhook/transfer', bodyParser.raw({ type: 'application/json' }));
+  app.use('/webhook/vrf', bodyParser.raw({ type: 'application/json' }));
 
   await app.listen(process.env.PORT ?? 3000);
 }
