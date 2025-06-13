@@ -134,7 +134,12 @@ export class WebhookController {
     }
 
     const parsed = JSON.parse(rawBody);
-    console.log(parsed, parsed.event?.data?.block?.logs[0].topics[0], parsed.event?.data?.block?.logs[0].topics[0] === '0x5c69e7026b653d866b5613bb00fd8c4b0504b1cbe8db600c406faac180924d5');
+    console.log(
+      parsed,
+      parsed.event?.data?.block?.logs[0].topics[0],
+      parsed.event?.data?.block?.logs[0].topics[0] ===
+        '0x5c69e7026b653d8606b5613bb00fd8c4b0504b1cbe8db600c406faac180924d5',
+    );
 
     const logs = parsed.event?.data?.block?.logs ?? [];
 
