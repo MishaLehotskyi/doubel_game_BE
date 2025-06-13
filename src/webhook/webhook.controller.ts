@@ -137,11 +137,13 @@ export class WebhookController {
     const logs = parsed.event?.data?.block?.logs[0] ?? [];
     const data = logs.data;
     const transactionHash = logs.transaction?.hash;
+    const contractAddress = logs.account?.address;
 
     const { requestId, randomWord } = decodeVrfData(data);
     console.log(
-      `🎲 VRF fulfilled: requestId=${requestId}, randomWord=${randomWord} transactionHash=${transactionHash}`,
+      `🎲 VRF fulfilled: requestId=${requestId}, randomWord=${randomWord} transactionHash=${transactionHash} contractAddress=${contractAddress}`,
     );
+    //await this.gameService.applyRandomNumber(randomWord, transactionHash);
 
     return res.sendStatus(200);
   }
