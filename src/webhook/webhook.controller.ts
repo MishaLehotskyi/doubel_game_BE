@@ -36,7 +36,7 @@ export class WebhookController {
   ) {}
 
   @Post('transfer')
-  handleWebhook(
+  async handleWebhook(
     @Req() req: Request,
     @Headers('x-alchemy-signature') signature: string,
     @Res() res: Response,
@@ -83,13 +83,12 @@ export class WebhookController {
       else if (to === MEGA && amount === parseUnits('500', 18))
         gameType = 'MEGA';
 
-      //if (gameType) {
-      console.log(`🎟 Создание тикета: ${gameType} для ${from}`);
-      //  const res = await this.gameService.getLatestByType(gameType);
-      //  if (res?.id) {
-      //    await this.ticketService.create({ gameId: res.id, metamaskId: from });
-      //  }
-      //}
+      if (gameType) {
+        const res = await this.gameService.getLatestByType(gameType);
+        if (res?.id) {
+          await this.ticketService.create({ gameId: res.id, metamaskId: from });
+        }
+      }
     }
 
     return res.sendStatus(200);
