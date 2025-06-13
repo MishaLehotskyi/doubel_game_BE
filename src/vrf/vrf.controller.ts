@@ -8,7 +8,13 @@ export class VrfController {
 
   @Post('request')
   @UseGuards(TicketSecretGuard)
-  request(@Query('nativePayment') nativePayment: string) {
-    return this.vrfService.requestRandom(nativePayment === 'true');
+  request(
+    @Query('nativePayment') nativePayment: string,
+    @Query('isMega') isMega: string,
+  ) {
+    return this.vrfService.requestRandom(
+      nativePayment === 'true',
+      isMega === 'true',
+    );
   }
 }
