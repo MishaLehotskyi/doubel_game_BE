@@ -105,7 +105,7 @@ export class WebhookController {
     }
 
     const rawBody = (req as any).body.toString('utf8');
-    const signingKey = process.env.ALCHEMY_SIGNING_KEY;
+    const signingKey = process.env.ALCHEMY_SIGNING_KEY_2;
 
     const valid = isValidSignatureForStringBody(
       rawBody,
