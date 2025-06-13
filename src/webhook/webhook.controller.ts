@@ -6,7 +6,7 @@ import {
   Headers,
   HttpStatus,
 } from '@nestjs/common';
-import { formatUnits, parseUnits } from 'ethers';
+import { formatUnits, parseUnits, ethers } from 'ethers';
 import { Request, Response } from 'express';
 import * as crypto from 'crypto';
 import { TicketService } from '../ticket/ticket.service';
@@ -26,6 +26,21 @@ function isValidSignatureForStringBody(
   hmac.update(body, 'utf8');
   const digest = hmac.digest('hex');
   return signature === digest;
+}
+
+function decodeVrfData(data: string): {
+  requestId: string;
+  randomWord: string;
+} {
+  const [requestId, randomWord] = ethers.AbiCoder.defaultAbiCoder().decode(
+    ['uint256', 'uint256'],
+    data,
+  );
+
+  return {
+    requestId: requestId.toString(),
+    randomWord: randomWord.toString(),
+  };
 }
 
 @Controller('webhook')
@@ -118,7 +133,25 @@ export class WebhookController {
       return res.status(HttpStatus.UNAUTHORIZED).send('Invalid signature');
     }
 
-    console.log(rawBody);
+    const parsed = JSON.parse(rawBody);
+
+    const logs = parsed.event?.data?.block?.logs ?? [];
+
+    for (const log of logs) {
+      const topics = log.topics;
+      const data = log.data;
+
+      // Check topic0 === keccak256("RequestFulfilled(uint256,uint256)")
+      if (
+        topics?.[0] ===
+        '0x5c69e7026b653d866b5613bb00fd8c4b0504b1cbe8db600c406faac180924d5'
+      ) {
+        const { requestId, randomWord } = decodeVrfData(data);
+        console.log(
+          `🎲 VRF fulfilled: requestId=${requestId}, randomWord=${randomWord}`,
+        );
+      }
+    }
 
     return res.sendStatus(200);
   }
