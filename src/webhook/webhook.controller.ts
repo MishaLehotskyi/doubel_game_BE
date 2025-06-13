@@ -150,7 +150,7 @@ export class WebhookController {
       // Check topic0 === keccak256("RequestFulfilled(uint256,uint256)")
       if (
         topics?.[0] ===
-        '0x5c69e7026b653d866b5613bb00fd8c4b0504b1cbe8db600c406faac180924d5'
+        '0x5c69e7026b653d8606b5613bb00fd8c4b0504b1cbe8db600c406faac180924d5'
       ) {
         const { requestId, randomWord } = decodeVrfData(data);
         console.log(
