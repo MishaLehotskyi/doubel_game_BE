@@ -118,6 +118,8 @@ export class WebhookController {
       return res.status(HttpStatus.UNAUTHORIZED).send('Invalid signature');
     }
 
+    console.log(rawBody);
+
     return res.sendStatus(200);
   }
 }
