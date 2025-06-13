@@ -74,7 +74,7 @@ export class WebhookController {
         continue;
       }
 
-      console.log(to === MINI, value);
+      console.log(to === MINI, act.value);
       let gameType: 'MINI' | 'STANDARD' | 'MEGA' | null = null;
 
       if (to === MINI && value === 100.0) gameType = 'MINI';
