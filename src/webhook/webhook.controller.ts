@@ -93,4 +93,31 @@ export class WebhookController {
 
     return res.sendStatus(200);
   }
+
+  @Post('vrf')
+  handleWebhookSecond(
+    @Req() req: Request,
+    @Headers('x-alchemy-signature') signature: string,
+    @Res() res: Response,
+  ) {
+    if (!req.body) {
+      return res.status(HttpStatus.BAD_REQUEST).send('Error');
+    }
+
+    const rawBody = (req as any).body.toString('utf8');
+    const signingKey = process.env.ALCHEMY_SIGNING_KEY;
+
+    const valid = isValidSignatureForStringBody(
+      rawBody,
+      signature,
+      signingKey as string,
+    );
+
+    if (!valid) {
+      console.warn('🚨 Неверная подпись Alchemy Webhook!');
+      return res.status(HttpStatus.UNAUTHORIZED).send('Invalid signature');
+    }
+
+    return res.sendStatus(200);
+  }
 }
