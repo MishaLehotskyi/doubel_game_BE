@@ -19,5 +19,6 @@ import { GameGateway } from '../game/game.gateway';
     VrfService,
     GameGateway,
   ],
+  exports: [TicketService],
 })
 export class TicketModule {}
