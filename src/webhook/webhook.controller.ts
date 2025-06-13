@@ -134,7 +134,7 @@ export class WebhookController {
     }
 
     const parsed = JSON.parse(rawBody);
-    console.log(parsed, parsed.event?.data?.block);
+    console.log(parsed, parsed.event?.data?.block?.logs);
 
     const logs = parsed.event?.data?.block?.logs ?? [];
 
