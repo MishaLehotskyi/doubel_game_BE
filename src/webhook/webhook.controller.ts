@@ -136,10 +136,11 @@ export class WebhookController {
     const parsed = JSON.parse(rawBody);
     const logs = parsed.event?.data?.block?.logs[0] ?? [];
     const data = logs.data;
+    const transactionHash = logs.transaction?.hash;
 
     const { requestId, randomWord } = decodeVrfData(data);
     console.log(
-      `🎲 VRF fulfilled: requestId=${requestId}, randomWord=${randomWord}`,
+      `🎲 VRF fulfilled: requestId=${requestId}, randomWord=${randomWord} transactionHash=${transactionHash}`,
     );
 
     return res.sendStatus(200);
