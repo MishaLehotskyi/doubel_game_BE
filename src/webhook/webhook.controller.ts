@@ -110,7 +110,7 @@ export class WebhookController {
   }
 
   @Post('vrf')
-  handleWebhookSecond(
+  async handleWebhookSecond(
     @Req() req: Request,
     @Headers('x-alchemy-signature') signature: string,
     @Res() res: Response,
@@ -143,7 +143,11 @@ export class WebhookController {
     console.log(
       `🎲 VRF fulfilled: requestId=${requestId}, randomWord=${randomWord} transactionHash=${transactionHash} contractAddress=${contractAddress}`,
     );
-    //await this.gameService.applyRandomNumber(randomWord, transactionHash);
+    await this.gameService.applyRandomNumber(
+      randomWord,
+      transactionHash,
+      '0xbea919e1a4410c06c649f70f2a9b5b36d985f248' === contractAddress,
+    );
 
     return res.sendStatus(200);
   }
