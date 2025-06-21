@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "Game" ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL;
+ALTER TABLE "Game" ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT now();
